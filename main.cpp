@@ -1,85 +1,80 @@
-// it makes the thing go brr
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*    Module:       main.cpp                                                  */
+/*    Author:       Ben Petterborg                                            */
+/*    Created:      2021/11/05                                                */
+/*    Description:  Speedbot Exponential Drivetrain                           */
+/*                                                                            */
+/*    Name: Ben Petterborg                                                    */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
 
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// LeftFrontMotor       motor         1               
-// RightFrontMotor      motor         10              
-// LeftRearMotor        motor         11              
-// RightRearMotor       motor         20              
+// LeftMotor            motor         1               
+// RightMotor           motor         10              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
+#include "math.h"
 
 using namespace vex;
 
-void setLeftDriveExpo (vex::directionType type, int percentage) 
-    {
-      if (percentage>=0)
-      {
-        // when stationary, or going forwards, put the percentage in the exponenential func
-        percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
-      }
-      else
-      {
-        // when reversing, take the positive percentage, and put it in exponential func
-        percentage = -percentage;
-        percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
-        // when the new percentage val is calculated, make negative for backwards movement
-        percentage = -percentage;
-      }
+// left exponential drive function
+int getLeftDriveSpeed (vex::directionType type, int percentage) 
+{
+  if (percentage>=0)
+  {
+    // when stationary, or going forwards, put the percentage in the exponential func
+    return percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
+  }
+  else
+  {
+    // when reversing, take the positive percentage, and put it in exponential func
+    percentage = -percentage;
+    percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
+    // when the new percentage val is calculated, make negative for backwards movement
+    return percentage = -percentage;
+  }
+}
 
-    }
-
-void setRightDriveExpo (vex::directionType type, int percentage) 
-    {
-      if (percentage>=0)
-      {
-        // when stationary, or going forwards, put the percentage in the exponenential func
-        percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
-      }
-      else
-      {
-        // when reversing, take the positive percentage, and put it in exponential func
-        percentage = -percentage;
-        percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
-        // when the new percentage val is calculated, make negative for backwards movement
-        percentage = -percentage;
-      }
-
-    }
+// right exponential drive function
+int getRightDriveSpeed (vex::directionType type, int percentage) 
+{
+  if (percentage>=0)
+  {
+    // when stationary, or going forwards, put the percentage in the exponenential func
+    return percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
+  }
+  else
+  {
+    // when reversing, take the positive percentage, and put it in exponential func
+    percentage = -percentage;
+    percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
+    // when the new percentage val is calculated, make negative for backwards movement
+    return percentage = -percentage;
+  }
+}
 
 
+// main stuff
 int main() 
 {
   // don't delete, bad things happen
   vexcodeInit();
 
   // deadband stops motors from spinning if joysticks are close to zero
-  //int deadband = 5;
+  int deadband = 5;
 
   while (true) 
   {
     // not quite sure what to do with this right now
-    setLeftDriveExpo (vex::directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()));
-    
-    setRightDriveExpo (vex::directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()));
 
-    /*
-
-    // probably delete these???
-    // (Axis3 + Axis1)
-    int leftMotorSpeed =
-        Controller1.Axis3.position() - Controller1.Axis1.position();
-    
-    
-    // (Axis3 - Axis1)
-    int rightMotorSpeed =
-        Controller1.Axis3.position() - Controller1.Axis1.position();
+    int leftMotorSpeed = getLeftDriveSpeed (vex::directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()));
+    int rightMotorSpeed = getRightDriveSpeed (vex::directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value()));
 
 
-    
     // set left motor group speed
     if (abs(leftMotorSpeed) < deadband) 
     {
@@ -114,7 +109,6 @@ int main()
     RightRearMotor.spin(forward);
 
     wait(25, msec);
-    */
 
   }
 }
