@@ -12,8 +12,11 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// LeftMotor            motor         1               
-// RightMotor           motor         10              
+// Controller1          controller                    
+// LeftFrontMotor       motor         1               
+// RightFrontMotor      motor         10              
+// LeftRearMotor        motor         11              
+// RightRearMotor       motor         20              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -27,7 +30,8 @@ int getLeftDriveSpeed (vex::directionType type, int percentage)
   if (percentage>=0)
   {
     // when stationary, or going forwards, put the percentage in the exponential func
-    return percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
+    percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage;
+    return percentage; 
   }
   else
   {
@@ -35,7 +39,8 @@ int getLeftDriveSpeed (vex::directionType type, int percentage)
     percentage = -percentage;
     percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
     // when the new percentage val is calculated, make negative for backwards movement
-    return percentage = -percentage;
+    percentage = -percentage;
+    return percentage;
   }
 }
 
@@ -45,7 +50,8 @@ int getRightDriveSpeed (vex::directionType type, int percentage)
   if (percentage>=0)
   {
     // when stationary, or going forwards, put the percentage in the exponenential func
-    return percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
+    percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage;
+    return percentage;
   }
   else
   {
@@ -53,7 +59,8 @@ int getRightDriveSpeed (vex::directionType type, int percentage)
     percentage = -percentage;
     percentage = 1.2*pow(1.043, percentage) - 1.2 + 0.2 * percentage; 
     // when the new percentage val is calculated, make negative for backwards movement
-    return percentage = -percentage;
+    percentage = -percentage;
+    return percentage;
   }
 }
 
@@ -65,14 +72,14 @@ int main()
   vexcodeInit();
 
   // deadband stops motors from spinning if joysticks are close to zero
-  int deadband = 5;
+  int deadband = 2;
 
   while (true) 
   {
     // not quite sure what to do with this right now
 
-    int leftMotorSpeed = getLeftDriveSpeed (vex::directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()));
-    int rightMotorSpeed = getRightDriveSpeed (vex::directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value()));
+    int leftMotorSpeed = getLeftDriveSpeed (vex::directionType::fwd, (Controller1.Axis3.value() + Controller1.Axis1.value()/2));
+    int rightMotorSpeed = getRightDriveSpeed (vex::directionType::fwd, (Controller1.Axis3.value() - Controller1.Axis1.value()/2));
 
 
     // set left motor group speed
@@ -98,7 +105,7 @@ int main()
     {
       // set to rightMotorSpeed
       RightFrontMotor.setVelocity(rightMotorSpeed, percent);
-      RightFrontMotor.setVelocity(rightMotorSpeed, percent);
+      RightRearMotor.setVelocity(rightMotorSpeed, percent);
     }
 
     // spin both motor groups forward
